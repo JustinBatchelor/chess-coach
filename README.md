@@ -74,6 +74,15 @@ podman run --rm --user 1001230000 --read-only \
 Create a public repository named `chess-coach` in the intended Quay account or
 organization. Do not put a Quay password in this repository.
 
+Release `0.1.0` is published for `linux/amd64` at:
+
+```text
+quay.io/jbatchel/chess-coach:0.1.0
+quay.io/jbatchel/chess-coach:sha-069592857b0e
+quay.io/jbatchel/chess-coach@sha256:00f40d0fd3b6070afeac6c3b5ba014fd6f40636319432f345d88fd90d9d31dfa
+quay.io/jbatchel/chess-coach:sbom-0.1.0
+```
+
 ```sh
 podman login quay.io
 export QUAY_NAMESPACE='jbatchel'
@@ -103,11 +112,17 @@ skopeo inspect --authfile "$auth_file" \
 
 Set `image.repository` and `image.digest` in the Helm values to deploy by
 digest. Tags remain useful release labels but are not used as production
-identity. Generate an SBOM with:
+identity. Generate an SBOM with pinned Syft running through Podman:
 
 ```sh
-syft "localhost/chess-coach:$VERSION" \
-  -o "spdx-json=build/sbom-$VERSION.spdx.json"
+export DIGEST='sha256:00f40d0fd3b6070afeac6c3b5ba014fd6f40636319432f345d88fd90d9d31dfa'
+make sbom QUAY_NAMESPACE="$QUAY_NAMESPACE" VERSION="$VERSION" DIGEST="$DIGEST"
+podman artifact add --replace \
+  --type application/spdx+json \
+  --file-type application/spdx+json \
+  "quay.io/$QUAY_NAMESPACE/chess-coach:sbom-$VERSION" \
+  "build/sbom-$VERSION.spdx.json"
+podman artifact push "quay.io/$QUAY_NAMESPACE/chess-coach:sbom-$VERSION"
 ```
 
 ## OpenShift deployment

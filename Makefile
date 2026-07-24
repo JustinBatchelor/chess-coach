@@ -5,6 +5,8 @@ VERSION ?= 0.1.0
 GIT_SHA ?= $(shell git rev-parse --short HEAD)
 PLATFORM ?= linux/amd64
 BUILD_PLATFORM ?= linux/$(shell $(PODMAN) info --format '{{.Host.Arch}}')
+DIGEST ?=
+SYFT_IMAGE ?= ghcr.io/anchore/syft:v1.49.0
 LOCAL_IMAGE := localhost/$(IMAGE_NAME):$(VERSION)
 QUAY_IMAGE := quay.io/$(QUAY_NAMESPACE)/$(IMAGE_NAME)
 
@@ -48,8 +50,13 @@ inspect:
 	skopeo inspect docker://$(QUAY_IMAGE):$(VERSION)
 
 sbom:
+	test -n "$(DIGEST)"
 	mkdir -p build
-	syft $(LOCAL_IMAGE) -o spdx-json=build/sbom-$(VERSION).spdx.json
+	$(PODMAN) run --rm \
+		-v "$(CURDIR)/build:/output:Z" \
+		$(SYFT_IMAGE) scan \
+		"registry:$(QUAY_IMAGE)@$(DIGEST)" \
+		-o "spdx-json=/output/sbom-$(VERSION).spdx.json"
 
 helm-check:
 	helm lint charts/chess-coach
