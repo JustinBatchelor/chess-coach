@@ -1,8 +1,9 @@
 ARG NODE_IMAGE=registry.access.redhat.com/ubi9/nodejs-22:latest
 ARG BUILD_IMAGE=registry.access.redhat.com/ubi9/ubi:latest
 ARG PYTHON_IMAGE=registry.access.redhat.com/ubi9/python-312:latest
+ARG FRONTEND_PLATFORM=linux/amd64
 
-FROM ${NODE_IMAGE} AS frontend
+FROM --platform=${FRONTEND_PLATFORM} ${NODE_IMAGE} AS frontend
 WORKDIR /opt/app-root/src
 COPY --chown=1001:0 frontend/package*.json ./
 RUN npm ci --no-audit --no-fund

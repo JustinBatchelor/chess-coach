@@ -79,9 +79,11 @@ podman login quay.io
 export QUAY_NAMESPACE='jbatchel'
 export VERSION='0.1.0'
 export GIT_SHA="$(git rev-parse --short HEAD)"
+export BUILD_PLATFORM="linux/$(podman info --format '{{.Host.Arch}}')"
 podman build --platform linux/amd64 \
   --build-arg APP_VERSION="$VERSION" \
   --build-arg VCS_REF="$GIT_SHA" \
+  --build-arg FRONTEND_PLATFORM="$BUILD_PLATFORM" \
   -t "localhost/chess-coach:$VERSION" -f Containerfile .
 podman tag "localhost/chess-coach:$VERSION" \
   "quay.io/$QUAY_NAMESPACE/chess-coach:$VERSION"

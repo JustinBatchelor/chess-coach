@@ -4,6 +4,7 @@ QUAY_NAMESPACE ?= jbatchel
 VERSION ?= 0.1.0
 GIT_SHA ?= $(shell git rev-parse --short HEAD)
 PLATFORM ?= linux/amd64
+BUILD_PLATFORM ?= linux/$(shell $(PODMAN) info --format '{{.Host.Arch}}')
 LOCAL_IMAGE := localhost/$(IMAGE_NAME):$(VERSION)
 QUAY_IMAGE := quay.io/$(QUAY_NAMESPACE)/$(IMAGE_NAME)
 
@@ -13,6 +14,7 @@ build:
 	$(PODMAN) build --platform $(PLATFORM) \
 		--build-arg APP_VERSION=$(VERSION) \
 		--build-arg VCS_REF=$(GIT_SHA) \
+		--build-arg FRONTEND_PLATFORM=$(BUILD_PLATFORM) \
 		-t $(LOCAL_IMAGE) -f Containerfile .
 
 up:
