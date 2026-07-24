@@ -1,7 +1,7 @@
 PODMAN ?= podman
 IMAGE_NAME ?= chess-coach
 QUAY_NAMESPACE ?= jbatchel
-VERSION ?= 0.1.0
+VERSION ?= 0.1.1
 GIT_SHA ?= $(shell git rev-parse --short HEAD)
 PLATFORM ?= linux/amd64
 BUILD_PLATFORM ?= linux/$(shell $(PODMAN) info --format '{{.Host.Arch}}')

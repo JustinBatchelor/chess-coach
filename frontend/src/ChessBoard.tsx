@@ -16,6 +16,11 @@ const pieces: Record<string, string> = {
   bP: "♟",
 };
 
+const fixedGrid = {
+  gridTemplateColumns: "repeat(8, minmax(0, 1fr))",
+  gridTemplateRows: "repeat(8, minmax(0, 1fr))",
+};
+
 type Props = {
   fen: string;
   orientation?: "white" | "black";
@@ -56,7 +61,7 @@ export function ChessBoard({ fen, orientation = "white", disabled = false, onMov
 
   return (
     <div className="board-shell">
-      <div className="chessboard" role="grid" aria-label="Chess board">
+      <div className="chessboard" role="grid" aria-label="Chess board" style={fixedGrid}>
         {ranks.flatMap((rank) =>
           files.map((file) => {
             const square = `${file}${rank}` as Square;

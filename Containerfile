@@ -38,7 +38,7 @@ RUN curl --fail --location --retry 3 \
 
 FROM ${PYTHON_IMAGE} AS runtime
 ARG STOCKFISH_TAG=sf_18
-ARG APP_VERSION=0.1.0
+ARG APP_VERSION=0.1.1
 ARG VCS_REF=unknown
 USER 0
 WORKDIR /opt/app
