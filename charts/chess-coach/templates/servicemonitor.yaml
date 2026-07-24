@@ -1,0 +1,16 @@
+{{- if .Values.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "chess-coach.fullname" . }}
+  labels:
+    {{- include "chess-coach.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "chess-coach.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+{{- end }}

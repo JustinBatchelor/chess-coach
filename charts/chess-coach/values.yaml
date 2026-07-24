@@ -1,0 +1,74 @@
+image:
+  repository: quay.io/jbatchel/chess-coach
+  tag: "0.1.0"
+  digest: ""
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+
+web:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+worker:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: "2"
+      memory: 1Gi
+
+route:
+  enabled: true
+  host: ""
+  annotations: {}
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
+session:
+  existingSecret: ""
+  cookieSecure: true
+  retentionDays: 90
+
+database:
+  existingSecret: chess-coach-database
+
+postgresql:
+  enabled: false
+  image: registry.redhat.io/rhel9/postgresql-16:latest
+  database: chesscoach
+  username: chesscoach
+  password: ""
+  storage:
+    size: 5Gi
+    storageClass: ""
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+engine:
+  analysisTimeMs: 150
+  hashMb: 64
+  version: "18"
+
+metrics:
+  serviceMonitor:
+    enabled: false
+
+podAnnotations: {}
+podLabels: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

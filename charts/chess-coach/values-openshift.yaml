@@ -1,0 +1,21 @@
+image:
+  repository: quay.io/jbatchel/chess-coach
+  tag: "0.1.0"
+  # Set this after pushing: sha256:...
+  digest: ""
+
+route:
+  enabled: true
+  host: chess.apps.sno.batchelor.live
+
+session:
+  cookieSecure: true
+  retentionDays: 90
+
+postgresql:
+  enabled: true
+  # Replace before installation or leave empty to let Helm generate one.
+  password: ""
+  storage:
+    storageClass: truenas-nfs
+    size: 5Gi

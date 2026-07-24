@@ -1,0 +1,18 @@
+Chess Coach has been installed.
+
+{{- if .Values.route.enabled }}
+Route:
+  {{- if .Values.route.host }}
+  https://{{ .Values.route.host }}
+  {{- else }}
+  Run: oc get route {{ include "chess-coach.fullname" . }} -o jsonpath='{.spec.host}'
+  {{- end }}
+{{- else }}
+Port-forward:
+  oc port-forward service/{{ include "chess-coach.fullname" . }} 8080:8080
+{{- end }}
+
+Verify:
+  oc rollout status deployment/{{ include "chess-coach.fullname" . }}-web
+  oc rollout status deployment/{{ include "chess-coach.fullname" . }}-worker
+

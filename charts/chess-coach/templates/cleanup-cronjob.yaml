@@ -1,0 +1,61 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "chess-coach.fullname" . }}-cleanup
+  labels:
+    {{- include "chess-coach.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cleanup
+spec:
+  schedule: "17 3 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      ttlSecondsAfterFinished: 600
+      template:
+        metadata:
+          labels:
+            {{- include "chess-coach.selectorLabels" . | nindent 12 }}
+            app.kubernetes.io/component: cleanup
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: {{ include "chess-coach.fullname" . }}
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: cleanup
+              image: {{ include "chess-coach.image" . | quote }}
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              args: ["cleanup"]
+              envFrom:
+                - configMapRef:
+                    name: {{ include "chess-coach.fullname" . }}
+              env:
+                - name: CHESS_DATABASE_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "chess-coach.databaseSecret" . }}
+                      key: database-url
+                - name: CHESS_SESSION_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "chess-coach.sessionSecret" . }}
+                      key: session-secret
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: tmp
+              emptyDir:
+                sizeLimit: 32Mi
+

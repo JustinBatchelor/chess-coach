@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["image", "web", "worker", "route", "session", "database", "postgresql", "engine"],
+  "properties": {
+    "image": {
+      "type": "object",
+      "required": ["repository", "tag", "digest", "pullPolicy"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "tag": { "type": "string", "minLength": 1 },
+        "digest": { "type": "string", "pattern": "^$|^sha256:[a-f0-9]{64}$" },
+        "pullPolicy": { "enum": ["Always", "IfNotPresent", "Never"] }
+      }
+    },
+    "web": { "type": "object" },
+    "worker": { "type": "object" },
+    "route": { "type": "object" },
+    "session": { "type": "object" },
+    "database": { "type": "object" },
+    "postgresql": { "type": "object" },
+    "engine": { "type": "object" }
+  }
+}
+

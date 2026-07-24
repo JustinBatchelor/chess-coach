@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "chess-coach.fullname" . }}
+  labels:
+    {{- include "chess-coach.labels" . | nindent 4 }}
+data:
+  CHESS_COOKIE_SECURE: {{ .Values.session.cookieSecure | quote }}
+  CHESS_RETENTION_DAYS: {{ .Values.session.retentionDays | quote }}
+  CHESS_ANALYSIS_TIME_MS: {{ .Values.engine.analysisTimeMs | quote }}
+  CHESS_STOCKFISH_HASH_MB: {{ .Values.engine.hashMb | quote }}
+  CHESS_ENGINE_VERSION: {{ .Values.engine.version | quote }}
+

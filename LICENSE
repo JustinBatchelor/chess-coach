@@ -1,0 +1,12 @@
+Chess Coach is licensed under the GNU General Public License, version 3 or,
+at your option, any later version (GPL-3.0-or-later).
+
+The complete license text is available at:
+https://www.gnu.org/licenses/gpl-3.0.txt
+
+SPDX-License-Identifier: GPL-3.0-or-later
+
+The container image also includes Stockfish under GPL-3.0. Its exact source,
+COPYING file, and authorship information are installed under
+/usr/share/licenses/stockfish and /usr/src/stockfish.
+
