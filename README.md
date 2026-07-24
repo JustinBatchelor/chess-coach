@@ -61,12 +61,12 @@ Validate the built image with an arbitrary OpenShift-like UID and read-only
 root filesystem:
 
 ```sh
-podman build -t localhost/chess-coach:0.1.0 -f Containerfile .
+podman build -t localhost/chess-coach:0.1.1 -f Containerfile .
 podman run --rm --user 1001230000 --read-only \
   --tmpfs /tmp:size=64m,mode=1777 \
   -e CHESS_DATABASE_URL=sqlite:////tmp/chess-coach.db \
   -e CHESS_SESSION_SECRET=container-validation-secret \
-  -p 8080:8080 localhost/chess-coach:0.1.0 web
+  -p 8080:8080 localhost/chess-coach:0.1.1 web
 ```
 
 ## Publishing to public Quay
@@ -74,19 +74,19 @@ podman run --rm --user 1001230000 --read-only \
 Create a public repository named `chess-coach` in the intended Quay account or
 organization. Do not put a Quay password in this repository.
 
-Release `0.1.0` is published for `linux/amd64` at:
+Release `0.1.1` is published for `linux/amd64` at:
 
 ```text
-quay.io/jbatchel/chess-coach:0.1.0
-quay.io/jbatchel/chess-coach:sha-069592857b0e
-quay.io/jbatchel/chess-coach@sha256:00f40d0fd3b6070afeac6c3b5ba014fd6f40636319432f345d88fd90d9d31dfa
-quay.io/jbatchel/chess-coach:sbom-0.1.0
+quay.io/jbatchel/chess-coach:0.1.1
+quay.io/jbatchel/chess-coach:sha-971b4e659cc2
+quay.io/jbatchel/chess-coach@sha256:21dc0ec48b6f914886b5b8678a40e3788f0b7e9b3f1b3cefa8ebd19d158c5c6b
+quay.io/jbatchel/chess-coach:sbom-0.1.1
 ```
 
 ```sh
 podman login quay.io
 export QUAY_NAMESPACE='jbatchel'
-export VERSION='0.1.0'
+export VERSION='0.1.1'
 export GIT_SHA="$(git rev-parse --short HEAD)"
 export BUILD_PLATFORM="linux/$(podman info --format '{{.Host.Arch}}')"
 podman build --platform linux/amd64 \
@@ -115,7 +115,7 @@ digest. Tags remain useful release labels but are not used as production
 identity. Generate an SBOM with pinned Syft running through Podman:
 
 ```sh
-export DIGEST='sha256:00f40d0fd3b6070afeac6c3b5ba014fd6f40636319432f345d88fd90d9d31dfa'
+export DIGEST='sha256:21dc0ec48b6f914886b5b8678a40e3788f0b7e9b3f1b3cefa8ebd19d158c5c6b'
 make sbom QUAY_NAMESPACE="$QUAY_NAMESPACE" VERSION="$VERSION" DIGEST="$DIGEST"
 podman artifact add --replace \
   --type application/spdx+json \

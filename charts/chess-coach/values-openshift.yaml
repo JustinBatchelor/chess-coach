@@ -1,7 +1,7 @@
 image:
   repository: quay.io/jbatchel/chess-coach
   tag: "0.1.1"
-  digest: "sha256:00f40d0fd3b6070afeac6c3b5ba014fd6f40636319432f345d88fd90d9d31dfa"
+  digest: "sha256:21dc0ec48b6f914886b5b8678a40e3788f0b7e9b3f1b3cefa8ebd19d158c5c6b"
 
 route:
   enabled: true
